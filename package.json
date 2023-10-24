@@ -1,0 +1,12 @@
+{
+  "name": "4-final-project-group-bill-splitting-app",
+  "version": "1.0.0",
+  "description": "## Description of Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node your-app.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
