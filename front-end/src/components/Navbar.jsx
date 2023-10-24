@@ -20,3 +20,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+//finished navbar
