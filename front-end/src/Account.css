@@ -1,0 +1,49 @@
+/* Account.css */
+
+.account-bg {
+  background-color: #F5FCFF; /* Light Blue background */
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.account-header, .profile-section, .settings-section, .feedback-section {
+  text-align: center;
+}
+
+.menu-icon, .icons {
+  font-size: 1.5rem;
+}
+
+.profile-image {
+  width: 60px;
+  height: 60px;
+  background-color: gray; /* Placeholder background. Replace with image */
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.profile-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.profile-email {
+  font-size: 1rem;
+  color: gray;
+  margin-top: 0.5rem;
+}
+
+.setting-button, .feedback-button {
+  display: block;
+  background-color: #80CBC4; /* Teal 300 from Tailwind CSS */
+  margin: 0.5rem 0;
+  padding: 1rem;
+  border-radius: 15px;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.setting-button:hover, .feedback-button:hover {
+  background-color: #4CA6A2; /* Darker teal for hover effect */
+}

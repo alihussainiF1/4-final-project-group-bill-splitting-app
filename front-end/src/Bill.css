@@ -1,0 +1,113 @@
+/* Bill.css */
+
+.bg-teal-200 {
+  background-color: #eef5f4; 
+}
+
+.bg-teal-300 {
+  background-color: #f0f5f5; 
+}
+
+.bg-orange-200 {
+  background-color: #FFCCBC; 
+}
+
+.bg-gray-300 {
+  background-color: #E0E0E0; 
+}
+
+.h-screen {
+  min-height: 100vh;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.text-2xl {
+  font-size: 2rem;
+}
+
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.text-teal-700 {
+  color: #00796B; 
+}
+
+.text-gray-700 {
+  color: #616161; 
+}
+
+.space-x-4 > * + * {
+  margin-left: 1rem;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+.pl-4 {
+  padding-left: 1rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+/* styling of the two buttons: add expense and navigation bar */
+button {
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #25deeb; /* if the users click or move their figer onto the button, it will turn blue */
+}
+
+
+button.nav-btn {
+  transition: background-color 0.3s;
+  margin-right: 1rem;
+}
+
+button.nav-btn:hover {
+  background-color: #424242;
+}
+
