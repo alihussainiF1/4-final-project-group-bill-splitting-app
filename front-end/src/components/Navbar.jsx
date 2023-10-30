@@ -7,7 +7,7 @@ const Navbar = () => {
   const location = useLocation();
   const pathName = location.pathname;
 
-  //changed up the events route and removed contact page
+  //changed up the events route and removed contact page.
 
   return (
     <nav className="navbar">
