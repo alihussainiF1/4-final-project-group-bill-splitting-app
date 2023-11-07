@@ -6,11 +6,10 @@ import "./App.css";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import FriendsPage from "./components/FriendsPage";
-import Events from "./components/Events"
-import Expense from "./components/Expense"; 
-import UserInfo from "./components/UserInfo"; 
+import Events from "./components/Events";
+import Expense from "./components/Expense";
+import UserInfo from "./components/UserInfo";
 import AddExpense from "./components/AddExpense";
-
 
 function App() {
   // used to keep track of which specific event the user choose to see
@@ -28,8 +27,6 @@ function App() {
           <Route path="/expense/" element={<Expense />} />
           <Route path="/user-info" element={<UserInfo />} />
           <Route path="/add-expense" element={<AddExpense />} />
-          
-
         </Routes>
       </Router>
     </div>
