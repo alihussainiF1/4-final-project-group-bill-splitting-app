@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Event from "./components/Event";
 import "./index.css";
@@ -12,9 +12,7 @@ import UserInfo from "./components/UserInfo";
 import AddExpense from "./components/AddExpense";
 
 function App() {
-  // used to keep track of which specific event the user choose to see
   const [event, setEvent] = useState({});
-
   return (
     <div className="container">
       <Router>
