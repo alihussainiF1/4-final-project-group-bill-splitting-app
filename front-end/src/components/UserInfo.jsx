@@ -11,6 +11,7 @@ function UserInfo({ isDarkMode, toggleDarkMode }) {
   const [randomUser, setRandomUser] = useState(null);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const fileInputRef = React.createRef(); // the user will choose an image file to upload the avatar
 
   const sendMessage = () => {
     console.log(message);
@@ -20,6 +21,31 @@ function UserInfo({ isDarkMode, toggleDarkMode }) {
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
+  };
+
+  // this will allow the user to change avatar by clicking the avatar
+  const openFileDialog = () => {
+    fileInputRef.current.click(); 
+  };
+
+  // to handle avatar upload
+  const handleAvatarUpload = (event) => {
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    axios.post('http://localhost:3001/user-info/upload-avatar', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(response => {
+      // the avatar image will change based on successful upload, so the userData will be new avatar URL
+      setUserData({ ...userData, avatar: URL.createObjectURL(file) });
+    })
+    .catch(error => {
+      console.error("Error uploading file:", error);
+    });
   };
 
   const backupData = {
@@ -86,11 +112,17 @@ function UserInfo({ isDarkMode, toggleDarkMode }) {
         <h1 className="page-title">Account</h1>
         {randomUser && (
           <>
-            <div className="user-detail-section">
+            <div className="user-detail-section" onClick={openFileDialog}>
               <img
-                src={userData.avatar}
+                src={userData ? userData.avatar : backupData.avatar}
                 alt="User's Avatar"
                 className="avatar"
+              />
+              <input 
+                type="file" 
+                style={{ display: 'none' }} 
+                ref={fileInputRef} 
+                onChange={handleAvatarUpload} 
               />
               <div className="user-name-email">
                 <div className="name">{randomUser.name}</div>

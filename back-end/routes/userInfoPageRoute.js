@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const upload = multer({ dest: 'uploads/' }); // new path for uploading avatar
 
 router.get("/", (req, res) => {
     // fetch user information and send it as a JSON response
@@ -23,6 +25,10 @@ router.get("/", (req, res) => {
     };
   
     res.json(userInfoData);
+});
+
+router.post("/upload-avatar", upload.single('avatar'), (req, res) => {
+    res.status(200).json({ message: "Avatar uploaded successfully!" });
 });
 
 module.exports = router;

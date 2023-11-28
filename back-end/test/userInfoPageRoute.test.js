@@ -47,3 +47,16 @@ describe("User Info API", () => {
       });
   });
 });
+
+  it("should upload avatar and return success message", (done) => {
+    chai.request(app)
+    .post("/user-info/upload-avatar")
+    // may need to append a file for testing
+    .end((err, res) => {
+    expect(err).to.be.null;
+    expect(res).to.have.status(200);
+    expect(res.body.message).to.equal("Avatar uploaded successfully!");
+    
+    done();
+    });
+});
