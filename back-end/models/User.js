@@ -13,9 +13,9 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  // email is optional so required is not set to true
   email: {
     type: String,
+    required: true,
   },
   // image of user, stored as object
   avatar: {
