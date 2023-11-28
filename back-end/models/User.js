@@ -17,8 +17,14 @@ const UserSchema = new Schema({
   email: {
     type: String,
   },
-  // image of user, stored as url or file path
-  avatar: String,
+  // image of user, stored as object
+  avatar: {
+    type: {
+      url: String,  // URL of the stored image
+      filename: String  // name of the file for reference (optional)
+    },
+    default: { url: "default_avatar_url", filename: "default" }
+  },
   friends: [
     {
       type: mongoose.Schema.Types.ObjectId,
