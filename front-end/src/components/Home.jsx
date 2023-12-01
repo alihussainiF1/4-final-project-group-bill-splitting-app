@@ -209,11 +209,11 @@ const Home = ({ isDarkMode }) => {
           <h2>Expenses Summary</h2>
           {/* <p className="heading2 total-amount">${calculateTotalSpending(data.expenses || [])}</p> */}
           <ul className="home-list">
-            {data.expenses.map((event) => (
-              <li key={event.event._id} className="small">
+            {data.expenses.map((expense, index) => (
+              <li key={expense.event._id + index} className="small">
                 <div className="center">
-                  <p className="home-expense-text">{event.event.name}</p>
-                  <p className="home-expense-amount">${event.amount.toFixed(2)}
+                  <p className="home-expense-text">{expense.event.name}</p>
+                  <p className="home-expense-amount">${expense.amount.toFixed(2)}
                   </p>
                 </div>
               </li>
