@@ -4,6 +4,7 @@ const app = express(); // instantiate an Express object
 const cors = require("cors");
 require("dotenv").config({ silent: true });
 const mongoose = require("mongoose");
+const path = require('path');
 
 const eventRoute = require("./routes/eventRoute");
 const addExpenseRoute = require("./routes/addExpenseRoute");
@@ -59,6 +60,12 @@ app.use("/logout", logoutRoute);
 app.use("/searchFriend", searchFriendRoute);
 app.use("/expense", expenseRoute);
 app.use("/settlement", settlementRoute);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+console.log(`Serving static files from ${path.join(__dirname, 'uploads')}`);
+
+
+
+
 
 // export the express app we created to make it available to other modules
 module.exports = app;

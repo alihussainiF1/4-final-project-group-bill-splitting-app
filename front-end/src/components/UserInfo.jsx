@@ -7,12 +7,14 @@ import Navbar from "./Navbar";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
+
 function UserInfo({ isDarkMode, toggleDarkMode }) {
-  const [data, setData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const { userId } = useParams();
 
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const fileInputRef = React.createRef(); // the user will choose an image file to upload the avatar
 
   const sendMessage = () => {
     console.log(message);
@@ -23,6 +25,32 @@ function UserInfo({ isDarkMode, toggleDarkMode }) {
     localStorage.removeItem("token");
     navigate("/");
   };
+
+  // this will allow the user to change avatar by clicking the avatar
+  const openFileDialog = () => {
+    fileInputRef.current.click(); 
+  };
+
+  // to handle avatar upload
+  const handleAvatarUpload = (event) => {
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append('avatar', file);
+  formData.append('userId', userId);
+
+  axios.post('http://localhost:3001/user-info/upload-avatar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  .then(response => {
+    // Update state with the avatar path returned from the backend
+    setUserData({ ...userData, avatar: response.data.avatar });
+  })
+  .catch(error => {
+    console.error("Error uploading file:", error);
+  });
+};
 
   useEffect(() => {
     console.log("fetching the event");
@@ -43,10 +71,11 @@ function UserInfo({ isDarkMode, toggleDarkMode }) {
         const result = await axios.get(
           `http://localhost:3001/user-info/${userId}`
         );
-        setData({
+        setUserData({
           ...result.data,
           name: decoded.username // override `name` from the response data with `userName` from the token
         });
+        console.log("Check avatar:", result.data.avatar);
       } catch (err) {
         console.error(err);
       }
@@ -70,7 +99,7 @@ function UserInfo({ isDarkMode, toggleDarkMode }) {
     };
   }, [isDarkMode]);
 
-  if (!data) {
+  if (!userData) {
     return <div>Loading user data...</div>;
   }
 
@@ -79,15 +108,20 @@ function UserInfo({ isDarkMode, toggleDarkMode }) {
       <div className="UserInfo">
         <h1 className="page-title">Account</h1>
         
-            <div className="user-detail-section">
-              <img
-                src={data.avatar} // the user may change the avatar
-                alt="User's Avatar"
+        <div className="user-detail-section" onClick={openFileDialog}>
+        <img src={userData.avatar ? `http://localhost:3001${userData.avatar}` : 'path_to_default_image'}
+         alt="User's Avatar"
                 className="avatar"
               />
+               <input 
+                type="file" 
+                style={{ display: 'none' }} 
+                ref={fileInputRef} 
+                onChange={handleAvatarUpload} 
+              />
               <div className="user-name-email">
-                <div className="name">{data.name}</div>
-                <div className="email">{data.email}</div>
+                <div className="name">{userData.name}</div>
+                <div className="email">{userData.email}</div>
               </div>
             </div>
             <div className="settings-list-general">
