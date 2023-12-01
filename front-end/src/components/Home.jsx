@@ -204,6 +204,26 @@ const Home = ({ isDarkMode }) => {
         <h1>Welcome, {data.userName}</h1>
       </div>
       <div className="dashboard">
+        
+        <div className="box events-pending">
+          <h2>Expenses Summary</h2>
+          {/* <p className="heading2 total-amount">${calculateTotalSpending(data.expenses || [])}</p> */}
+          <ul className="home-list">
+            {data.expenses.map((event) => (
+              <li key={event.event._id} className="small">
+                <div className="center">
+                  <p className="home-expense-text">{event.event.name}</p>
+                  <p className="home-expense-amount">${event.amount.toFixed(2)}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          {/* <Link to="/event" className="view-all">
+            View All
+          </Link> */}
+        </div>
+
         <div className="box events-summary">
           <h2 className="heading2">Events Summary</h2>
           <ul className="home-list">
@@ -224,25 +244,7 @@ const Home = ({ isDarkMode }) => {
             View All
           </Link>
         </div>
-        <div className="box events-pending">
-          <h2>Expenses Summary</h2>
-          {/* <p className="heading2 total-amount">${calculateTotalSpending(data.expenses || [])}</p> */}
-          <ul className="home-list">
-            {data.expenses.map((event) => (
-              <li key={event.event._id} className="small">
-                <div className="center">
-                  <p className="home-expense-text">{event.event.name}</p>
-                  <p className="home-expense-amount">
-                    ${event.amount.toFixed(2)}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
-          {/* <Link to="/event" className="view-all">
-            View All
-          </Link> */}
-        </div>
+
         <div className="box friends-pending">
           <h2 className="heading2">Friends Summary</h2>
           <ul className="home-list">
