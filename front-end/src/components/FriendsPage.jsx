@@ -43,13 +43,26 @@ function FriendsPage({ isDarkMode }) {
 
     if (!userData) return <div>Loading...</div>;
 
+    // Helper function to construct the full URL for the avatar
+    const getAvatarUrl = (avatarPath) => {
+        if (!avatarPath) {
+            // If there's no avatar path, return the backup data avatar or set a default one
+            return backupData.avatar;
+        }
+        // Prepend the base URL if the avatar path is not an HTTP URL
+        if (avatarPath.startsWith('http')) {
+            return avatarPath;
+        }
+        return `http://localhost:3001${avatarPath.startsWith('/') ? '' : '/'}${avatarPath}`;
+    };
+
     // const totalBalance = userData.friends && userData.friends.length ? userData.friends.reduce((acc, friend) => acc + parseFloat(friend.balance.replace('$', '')), 0) : 0;
 
     return (
         <div className="friends-page">
             <h1 className="page-title">Friends</h1>
             <div className="balance-section">
-                <img src={userData.avatar} alt="User Avatar" className="user-avatar"/>
+            <img src={getAvatarUrl(userData.avatar)} alt={`${userData.username}'s avatar`} className="user-avatar"/>
                 <div>
                     <div className="balance-title">Total balance</div>
                     {/* <div className="balance-details">
@@ -71,7 +84,7 @@ function FriendsPage({ isDarkMode }) {
                     {userData.friends.map((friend) => (
                         <li key={friend.username} className="friend-item">
                             <span className='item-name-avatar'>
-                                <img src={friend.avatar} alt={`${friend.username}'s avatar`} className="friend-avatar"/>
+                            <img src={getAvatarUrl(friend.avatar)} alt={`${friend.username}'s avatar`} className="friend-avatar"/>
                                 <span>{friend.username}</span>
                             </span>
                             {/* <span className={parseFloat(friend.balance.replace('$', '')) < 0 ? "negative-balance" : "positive-balance"}>

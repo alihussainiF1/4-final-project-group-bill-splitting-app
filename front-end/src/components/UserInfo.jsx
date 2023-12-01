@@ -99,6 +99,16 @@ function UserInfo({ isDarkMode, toggleDarkMode }) {
     };
   }, [isDarkMode]);
 
+  // Function to get the avatar URL
+  const getAvatarUrl = (avatar) => {
+    if (!avatar) {
+        // If the avatar isn't set, return undefined or a placeholder image URL
+        return undefined;
+    }
+    // Check if the avatar URL is a complete URL or a relative path
+    return avatar.startsWith('http') ? avatar : `http://localhost:3001${avatar.startsWith('/') ? '' : '/'}${avatar}`;
+};
+
   if (!userData) {
     return <div>Loading user data...</div>;
   }
@@ -109,7 +119,7 @@ function UserInfo({ isDarkMode, toggleDarkMode }) {
         <h1 className="page-title">Account</h1>
         
         <div className="user-detail-section" onClick={openFileDialog}>
-        <img src={userData.avatar ? `http://localhost:3001${userData.avatar}` : 'path_to_default_image'}
+        <img src={getAvatarUrl(userData.avatar)} 
          alt="User's Avatar"
                 className="avatar"
               />

@@ -68,6 +68,16 @@ function AddFriendModal({ showModal, onClose }) {
         });
     }
 
+    // Helper function to construct the full URL for the avatar
+    const getAvatarUrl = (avatarPath) => {
+        
+        // Prepend the base URL if the avatar path is not an HTTP URL
+        if (avatarPath.startsWith('http')) {
+            return avatarPath;
+        }
+        return `http://localhost:3001${avatarPath.startsWith('/') ? '' : '/'}${avatarPath}`;
+    };
+
 
     return (
         <div className="modal">
@@ -79,7 +89,7 @@ function AddFriendModal({ showModal, onClose }) {
                 {loading && <div>Loading...</div>}
                 {userData && (
                     <div className="add-friend-item">
-                        <img src={userData.avatar} alt={`avatar`} className="friend-avatar"/>
+                        <img src={getAvatarUrl(userData.avatar)} alt={`${userData.name}'s avatar`} className="friend-avatar"/>
                         <span className="add-friend-name">{userData.username}</span>
                         <img 
                             src={addFriendButton}
