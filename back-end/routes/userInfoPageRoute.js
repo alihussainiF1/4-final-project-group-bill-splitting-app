@@ -1,11 +1,6 @@
 const express = require("express");
 const router = express.Router();
-<<<<<<< HEAD
-const multer = require("multer");
-const upload = multer({ dest: 'uploads/' }); // new path for uploading avatar
-=======
 const { User } = require("../models/User.js");
->>>>>>> master
 
 router.get("/:userId", async (req, res) => {
     try {
@@ -22,9 +17,5 @@ router.get("/:userId", async (req, res) => {
       res.status(500).json({ message: "Error fetching user data" });
     }
   });
-
-router.post("/upload-avatar", upload.single('avatar'), (req, res) => {
-    res.status(200).json({ message: "Avatar uploaded successfully!" });
-});
 
 module.exports = router;
