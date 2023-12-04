@@ -1,70 +1,111 @@
 import React, { useState, useEffect } from "react";
-import '../styles/Events.css';
+import "../styles/Events.css";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import AddEvent from "./AddEvent";
-import EventsFilter from "../images/filter.png"; 
+import EventsFilter from "../images/filter.png";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 function Events({ isDarkMode }) {
-    const[eventData, setEventData] = useState([])
-    const[addEvent, setaddEvent] = useState(false)
-    const[showFilter, setShowFilter] = useState(false);
-    const[selectedFilter, setSelectedFilter] = useState('all');
-    const[filteredEvents, setFilteredEvents] = useState([]);
-    
-    function reformatDate(dateStr) {
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const date = new Date(dateStr);
-      
-        const monthName = months[date.getMonth()];
-        const day = date.getDate();
-        const year = date.getFullYear();
-    
-        return `${monthName} ${day} ${year}`;
+  const [eventData, setEventData] = useState([]);
+  const [addEvent, setaddEvent] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("all");
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate("/");
+  };
+
+  function reformatDate(dateStr) {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const date = new Date(dateStr);
+
+    const monthName = months[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    return `${monthName} ${day} ${year}`;
+  }
+
+  // Toggle the 'body-dark-mode' class on the body element
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add("body-dark-mode");
+    } else {
+      document.body.classList.remove("body-dark-mode");
     }
 
-        // Toggle the 'body-dark-mode' class on the body element
-    useEffect(() => {
-        if (isDarkMode) {
-            document.body.classList.add('body-dark-mode');
+    // Clean up function to remove the class when the component unmounts or when dark mode is turned off
+    return () => {
+      document.body.classList.remove("body-dark-mode");
+    };
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    //fetch mock data about a user's events list
+    async function dataFetch() {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          console.error("No token found");
+          console.error("Plese login in view pages");
+
+          setIsLoggedIn(false);
+          return;
+        }
+
+        const decode = jwtDecode(token);
+        if (!decode || !decode.id) {
+          console.error("No current user found in local storage.");
+          return;
         } else {
-            document.body.classList.remove('body-dark-mode');
+          console.log(decode.id);
         }
-        
-        // Clean up function to remove the class when the component unmounts or when dark mode is turned off
-        return () => {
-            document.body.classList.remove('body-dark-mode');
-        };
-    }, [isDarkMode]);
+        //requesting data from the mock API endpoint
+        const response = await axios.get(
+          `http://localhost:3001/events/for/${decode.id}`
+        );
+        console.log(response);
+        //return the data
+        setEventData(response.data);
+      } catch (error) {
+        console.error("There was an error fetching the data:", error);
+      }
+    }
+    dataFetch();
+  }, []);
 
-    useEffect(()=>{
-        //fetch mock data about a user's events list
-        async function dataFetch(){ 
-            try{
-                const token = localStorage.getItem("token");
-                const decode = jwtDecode(token);
-                if (!decode || !decode.id) {
-                    console.error("No current user found in local storage.");
-                    return;
-                } else {
-                    console.log(decode.id);
-                }
-                //requesting data from the mock API endpoint
-                const response = await axios.get(`http://localhost:3001/events/for/${decode.id}`);
-                console.log(response)
-                //return the data
-                setEventData(response.data)
+  if (!isLoggedIn)
+    return (
+      <div>
+        <div className="text-center">Please log in to view pages!</div>
+        <button onClick={handleButtonClick} className="login-button">
+          Click here to log in
+        </button>
+      </div>
+    );
 
-            }catch(error){
-                console.error("There was an error fetching the data:", error);
-            }
-        }
-        dataFetch();
-    },[]);
-
-    /*
+  /*
     let clearedEvents = [];
     let otherEvents = [];
     if (eventData.events && eventData.events.length){
@@ -131,20 +172,19 @@ function Events({ isDarkMode }) {
     }
 
     */
-   
-    function EventClick(eventId){
-        console.log(`Event ${eventId} was clicked`)
-    }
-    
 
-    return(
-        <div className = "Events">
-            <h1 className = "title">Events</h1>
-            <button className="add_events_button" onClick={() => setaddEvent(true)}>
-                Add Events
-            </button>
+  function EventClick(eventId) {
+    console.log(`Event ${eventId} was clicked`);
+  }
 
-{/* total balance Section + Filter Icon
+  return (
+    <div className="Events">
+      <h1 className="title">Events</h1>
+      <button className="add_events_button" onClick={() => setaddEvent(true)}>
+        Add Events
+      </button>
+
+      {/* total balance Section + Filter Icon
 
             <div className="Total_Balance_Section">
                 <img src={eventData.avatar} alt="User's Avatar" className="Total_Balance_avatar"></img>
@@ -188,7 +228,7 @@ function Events({ isDarkMode }) {
 
                  */}
 
-{/*
+      {/*
             <div className="events-list">
                 <ul>
                     {filteredEvents.map(event =>(
@@ -209,36 +249,45 @@ function Events({ isDarkMode }) {
             
             */}
 
-            <div className="events-list">
-                <ul>
-                    {eventData.events && eventData.events.length > 0 ? (eventData.events.map(event =>(
-                        <li key = {event._id} className="event-list">
-                            <div className="Event-date">
-                                {reformatDate(event.date)}
-                            </div>
-                            <div className="Event-name" style={{ marginBottom: '5px' }}>
-                                <span>{event.name}</span>
-                            </div>
-                            <Link to={`/event/${event._id}`}>
-                            <button onClick={() => EventClick(event.id)}>View Event</button>
-                            </Link>
-                        </li>
-                        ))
-                    ) : (
-                        <div className="no-events-message">Please add your first event!</div>
-                    )}
-                </ul>
+      <div className="events-list">
+        <ul>
+          {eventData.events && eventData.events.length > 0 ? (
+            eventData.events.map((event) => (
+              <li key={event._id} className="event-list">
+                <div className="Event-date">{reformatDate(event.date)}</div>
+                <div className="Event-name" style={{ marginBottom: "5px" }}>
+                  <span>{event.name}</span>
+                </div>
+                <Link to={`/event/${event._id}`}>
+                  <button onClick={() => EventClick(event.id)}>
+                    View Event
+                  </button>
+                </Link>
+              </li>
+            ))
+          ) : (
+            <div className="no-events-message">
+              Please add your first event!
             </div>
+          )}
+        </ul>
+      </div>
 
-
-            {addEvent && (
-                <AddEvent addEvent = {addEvent} onClose={() => {setaddEvent(false); window.location.reload();}} />
-            )}
-            <div className="navbar-placeholder" style={{ height: '4rem' }}></div>
-            <div className="mt-6"><Navbar/></div>
-
-        </div>
-    )
+      {addEvent && (
+        <AddEvent
+          addEvent={addEvent}
+          onClose={() => {
+            setaddEvent(false);
+            window.location.reload();
+          }}
+        />
+      )}
+      <div className="navbar-placeholder" style={{ height: "4rem" }}></div>
+      <div className="mt-6">
+        <Navbar />
+      </div>
+    </div>
+  );
 }
 
-export default Events
+export default Events;

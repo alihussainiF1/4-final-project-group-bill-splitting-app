@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
 import { useLocation } from "react-router-dom";
 import calendar from "../images/calendar.png";
@@ -14,14 +14,19 @@ const Navbar = ({ isDarkMode }) => {
 
   // extract userId for link to User Page
   const token = localStorage.getItem("token");
+
+  if (!token) {
+    console.error("No token found");
+    console.error("Plese login in view pages");
+    return null;
+  }
   const decoded = jwtDecode(token);
   const userId = decoded.id;
-  
 
   //changed up the events route and removed contact page
 
   return (
-    <nav className={`navbar ${isDarkMode ? 'dark-mode' : ''}`}>
+    <nav className={`navbar ${isDarkMode ? "dark-mode" : ""}`}>
       <ul>
         <li className={pathName === "/home" ? "active" : "normal"}>
           <img

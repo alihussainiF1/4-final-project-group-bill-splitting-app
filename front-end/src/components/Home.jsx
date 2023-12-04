@@ -4,8 +4,17 @@ import Navbar from "./Navbar";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const Home = ({ isDarkMode }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    // Redirect to another route when the button is clicked
+    navigate("/");
+  };
+
   const [data, setData] = useState({
     userName: "",
     totalSpending: 0,
@@ -93,21 +102,43 @@ const Home = ({ isDarkMode }) => {
   };
 
   function reformatDate(dateStr) {
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
     const date = new Date(dateStr);
-  
+
     const monthName = months[date.getMonth()];
     const day = date.getDate();
     const year = date.getFullYear();
 
     return `${monthName} ${day} ${year}`;
-}
+  }
 
   useEffect(() => {
-    const getTokenFromLocalStorage = () => {
-      const token = localStorage.getItem("token");
-      return token;
-    };
+    // const getTokenFromLocalStorage = () => {
+    //   const token = localStorage.getItem("token");
+
+    //   if (!token) {
+    //     console.error("No token found");
+    //     console.error("Plese login in view pages");
+
+    //     setIsLoggedIn(false);
+    //     return null;
+    //   }
+
+    //   return token;
+    // };
 
     const decodeToken = (token) => {
       try {
@@ -125,7 +156,16 @@ const Home = ({ isDarkMode }) => {
 
     const fetchData = async () => {
       try {
-        const token = getTokenFromLocalStorage();
+        // const token = getTokenFromLocalStorage();
+
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("No token found");
+          console.error("Plese login in view pages");
+          setIsLoggedIn(false);
+          return;
+        }
+
         const currentUser = decodeToken(token);
 
         let totalSpending = 0;
@@ -134,32 +174,38 @@ const Home = ({ isDarkMode }) => {
         if (currentUser) {
           console.log("Current User:", currentUser);
 
-          const expenseRes = await axios.get(`http://localhost:3001/settlement/from/${currentUser.id}`);
+          const expenseRes = await axios.get(
+            `http://localhost:3001/settlement/from/${currentUser.id}`
+          );
           console.log("Home Response:", expenseRes.data);
           const newTotalSpending = calculateTotalSpending(expenseRes.data);
-          const newExpenses = expenseRes.data.map(settlement => {
+          const newExpenses = expenseRes.data.map((settlement) => {
             return {
-                event: settlement.event,
-                amount: settlement.amount
+              event: settlement.event,
+              amount: settlement.amount,
             };
-        });
+          });
 
           // Fetch events data
-          const eventsRes = await axios.get(`http://localhost:3001/events/for/${currentUser.id}`);
+          const eventsRes = await axios.get(
+            `http://localhost:3001/events/for/${currentUser.id}`
+          );
           const events = eventsRes.data.events || [];
 
           // Fetch friends data
-          const friendsRes = await axios.get(`http://localhost:3001/friends/${currentUser.id}`);
+          const friendsRes = await axios.get(
+            `http://localhost:3001/friends/${currentUser.id}`
+          );
           const friends = friendsRes.data.friends || [];
 
           const userName = currentUser.username || "";
 
-          setData({ 
-            userName, 
-            totalSpending: newTotalSpending, 
-            expenses: newExpenses, 
-            friends, 
-            events 
+          setData({
+            userName,
+            totalSpending: newTotalSpending,
+            expenses: newExpenses,
+            friends,
+            events,
           });
         } else {
           console.error("No valid user found.");
@@ -175,8 +221,8 @@ const Home = ({ isDarkMode }) => {
 
   function calculateTotalSpending(settlements) {
     let total = 0;
-    settlements.forEach(settlement => {
-        total += settlement.amount;
+    settlements.forEach((settlement) => {
+      total += settlement.amount;
     });
     return total;
   }
@@ -198,6 +244,16 @@ const Home = ({ isDarkMode }) => {
   const friendsPendingPayment = data.friends ? data.friends.slice(0, 3) : [];
   const eventsPending = data.events ? data.events.slice(0, 3) : [];
 
+  if (!isLoggedIn)
+    return (
+      <div>
+        <div className="text-center">Please log in to view pages!</div>
+        <button onClick={handleButtonClick} className="login-button">
+          Click here to log in
+        </button>
+      </div>
+    );
+
   return (
     <div className="home-container">
       <div className="greeting">
@@ -209,12 +265,14 @@ const Home = ({ isDarkMode }) => {
           <ul className="home-list">
             {eventsPending.length > 0 ? (
               eventsPending.map((event) => (
-              <li key={event.id} className="small">
-                <div className="center">
-                  <p className="home-expense-text">{event.name}</p>
-                  <p className="home-expense-amount">{reformatDate(event.date)}</p>
-                </div>
-              </li>
+                <li key={event.id} className="small">
+                  <div className="center">
+                    <p className="home-expense-text">{event.name}</p>
+                    <p className="home-expense-amount">
+                      {reformatDate(event.date)}
+                    </p>
+                  </div>
+                </li>
               ))
             ) : (
               <div>No Events Added Yet.</div>
@@ -248,12 +306,12 @@ const Home = ({ isDarkMode }) => {
           <ul className="home-list">
             {friendsPendingPayment.length > 0 ? (
               friendsPendingPayment.map((friend) => (
-              <li key={friend.id} className="small">
-                <div className="center">
-                  <p className="home-expense-text">{friend.username}</p>
-                  <p className="home-expense-amount">{friend.balance}</p>
-                </div>
-              </li>
+                <li key={friend.id} className="small">
+                  <div className="center">
+                    <p className="home-expense-text">{friend.username}</p>
+                    <p className="home-expense-amount">{friend.balance}</p>
+                  </div>
+                </li>
               ))
             ) : (
               <div>No Friends Added Yet.</div>
