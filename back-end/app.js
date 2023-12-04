@@ -4,6 +4,7 @@ const app = express(); // instantiate an Express object
 const cors = require("cors");
 require("dotenv").config({ silent: true });
 const mongoose = require("mongoose");
+const path = require('path');
 
 const eventRoute = require("./routes/eventRoute");
 const addExpenseRoute = require("./routes/addExpenseRoute");
@@ -42,6 +43,8 @@ app.get("/", (req, res) => {
 app.get("/signup", (req, res) => {
   res.send("Sign Up Successful!");
 });
+
+app.use(express.static(path.join(__dirname, 'front-end/build')));
 
 app.use("/addExpensePayer", addExpensePayerRoute);
 app.use("/add-expense", addExpenseRoute);
