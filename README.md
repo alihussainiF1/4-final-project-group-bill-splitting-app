@@ -3,6 +3,7 @@
 ## Description of Project
 
 The Group Bill Splitting App is designed to streamline the process of splitting bills among groups of people. In today's social and financial landscape, individuals often find themselves sharing expenses in various settings, such as dining out, traveling, or living together. This application aims to provide an efficient and user-friendly solution for managing shared expenses, ensuring that everyone pays their fair share effortlessly.
+Test line
 
 ### Product Vision Statement
 
